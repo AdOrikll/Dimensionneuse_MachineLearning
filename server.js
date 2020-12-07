@@ -25,18 +25,18 @@ app.use(express.urlencoded({extended: true}))
 // Site
 app.use(express.static('website'))
 
+const model = new TeachableMachine({
+    modelUrl: "https://teachablemachine.withgoogle.com/models/u3cWdHHG1/"
+});
+
 // POST endpoint
 app.post('/image', upload.single('image'), function (req, res, next) {
-    console.log(req.file);
-
-    const model = new TeachableMachine({
-        modelUrl: "https://teachablemachine.withgoogle.com/models/u3cWdHHG1/"
-    });
+    console.log(`Received ${req.file.originalname}`);
 
     const url = __dirname + '/' + req.file.path
     const results = model.classify({imageUrl: url})
         .then(r => {
-            console.log(r)
+            res.send(r)
         })
         .catch(err => {
             console.log(err)
