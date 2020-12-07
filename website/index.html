@@ -36,10 +36,10 @@
 </head>
 <body>
 
-<div>
-    <input type="file" id="input" name="filename">
+<form action="/image" method="post" enctype="multipart/form-data">
+    <input type="file" id="input" name="image">
     <button id="upload">UPLOAD</button>
-</div>
+</form>
 
 <i id="image"></i>
 
@@ -49,31 +49,6 @@
 </div>
 
 <script>
-    $('#upload').click(() => {
-        // Récupération des éléments
-        const fileInput = document.getElementById('input');
-        const i = document.getElementById('image'); //i est une image
-
-        // Préparation de l'image à envoyer
-        const selectedFile = new FileReader().readAsDataURL(fileInput.files[0]);
-
-        // Requête
-        $.ajax({
-            url : "/image",
-            type: "POST",
-            body: {
-                image: selectedFile
-            },
-            success: function(data, textStatus, jqXHR) {
-                console.log(result);
-            },
-            error: function(jqXHR, textStatus, errorThrown){
-                i.style.backgroundColor = 'red'
-            }
-        });
-
-        i.src = 'data:image/jpeg;base64,' + btoa(selectedFile);
-    });
 </script>
 
 </body>
