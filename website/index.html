@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <style>
+        body {
+            display: flex;
+            flex-flow: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            min-width: 100vw;
+            font-family: "JetBrains Mono", monospace;
+        }
+
+        button {
+            padding: 8px;
+            color: aquamarine;
+            font-size: 30px;
+        }
+
+        #image {
+            background-color: #CCC;
+            width: 800px;
+            height: 600px;
+            margin: 32px;
+        }
+
+        .resultat {
+            background-color: blue;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+
+<div>
+    <input type="file" id="input" name="filename">
+    <button id="upload">UPLOAD</button>
+</div>
+
+<i id="image"></i>
+
+<div id="id"></div>
+
+<div id="resultats">
+</div>
+
+<script>
+    $('#upload').click(() => {
+        // Récupération des éléments
+        const fileInput = document.getElementById('input');
+        const i = document.getElementById('image'); //i est une image
+
+        // Préparation de l'image à envoyer
+        const selectedFile = new FileReader().readAsDataURL(fileInput.files[0]);
+
+        // Requête
+        $.ajax({
+            url : "/image",
+            type: "POST",
+            body: {
+                image: selectedFile
+            },
+            success: function(data, textStatus, jqXHR) {
+                console.log(result);
+            },
+            error: function(jqXHR, textStatus, errorThrown){
+                i.style.backgroundColor = 'red'
+            }
+        });
+
+        i.src = 'data:image/jpeg;base64,' + btoa(selectedFile);
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "name": "Dimensionneuse",
+  "version": "1.0.0",
+  "dependencies": {
+    "@sashido/teachablemachine-node": "^1.2.1",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "ip": "^1.1.5"
+  },
+  "scripts": {
+    "server": "node server.js"
+  }
+}
