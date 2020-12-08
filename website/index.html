@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <meta name = "viewport" content = "user-scalable=no, initial-scale=1.0, maximum-scale=1.0, width=device-width">
 
     <style>
         body {
@@ -12,25 +13,76 @@
             justify-content: center;
             min-height: 100vh;
             min-width: 100vw;
-            font-family: "JetBrains Mono", monospace;
+            margin: 32px 0;
+
+            background: rgb(246,180,106);
+            background: linear-gradient(197deg, rgba(246,180,106,1) 0%, rgba(179,88,37,1) 100%);
+        }
+
+        body, input, button {
+            font-family: "JetBrains Mono", monospace !important;
         }
 
         button {
             padding: 8px;
-            color: aquamarine;
-            font-size: 30px;
+            margin: 16px 64px;
         }
 
         #image {
             background-color: #CCC;
             width: 400px;
-            height: 300px;
             margin: 32px;
+            border-radius: 6px;
         }
 
-        .resultat {
-            background-color: blue;
+        #resultats {
+            width: 80%;
+            padding: 32px 10%;
+            box-sizing: border-box;
+            display: flex;
+            flex-flow: column;
+            align-items: center;
+            background-color: white;
+            border-radius: 16px;
         }
+
+        #form {
+            display: flex;
+            flex-flow: column;
+            background-color: white;
+            padding: 32px 32px 16px;
+            border-radius: 16px;
+        }
+
+        #form, img, #resultats {
+            box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+        }
+
+        .result-container {
+            display: flex;
+            flex-flow: row;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            margin: 8px 0;
+        }
+
+        .result-name {
+            width: 200px;
+        }
+
+        .result-bar {
+            height: 24px;
+            width: 100%;
+            border: 2px solid black;
+            border-radius: 8px;
+        }
+
+        .result-innerBar {
+            height: 100%;
+            background-color: maroon;
+        }
+
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
@@ -38,15 +90,14 @@
 
 <form id="form">
     <input type="file" id="input" name="image">
-    <button id="upload">UPLOAD</button>
+    <button id="upload">Envoyer l'image</button>
 </form>
 
-<i id="image"></i>
+<img id="image"></img>
 
 <div id="id"></div>
 
-<div id="resultats">
-</div>
+<div id="resultats">Résultats de l'analyse</div>
 
 <script>
     const form = document.getElementById('form')
@@ -59,7 +110,34 @@
         });
 
         let result = await response.json();
-        console.log(result)
+
+        let reader = new FileReader();
+        reader.onloadend = function() {
+            $('#image').attr("src", reader.result)
+        }
+        reader.readAsDataURL(document.getElementById('input').files[0])
+
+        $('#resultats').empty()
+
+        result.forEach(entry => {
+            var container = document.createElement("div")
+            container.className = "result-container"
+
+            var name = document.createElement("div")
+            name.className = "result-name"
+            name.innerText = `${entry.class} (${(entry.score * 100).toFixed()}%)`
+            container.appendChild(name)
+
+            var bar = document.createElement("div")
+            bar.className = "result-bar"
+            var innerBar = document.createElement("div")
+            innerBar.className = "result-innerBar"
+            innerBar.style.width = entry.score * 100 + "%"
+            bar.appendChild(innerBar)
+            container.appendChild(bar)
+
+            $('#resultats').append(container)
+        })
     };
 </script>
 
